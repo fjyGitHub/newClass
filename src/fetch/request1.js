@@ -38,7 +38,7 @@ let common_url = 'http://120.79.10.79/';  //服务器地址
  * @param {JSON} [params=''] body的请求参数，默认为空
  * @return 返回Promise
  */
-function fetchRequest(config) {
+export function fetchRequest(config) {
   let _url = common_url + config.url
   let _params = config.params || {}
   let _method = config.method || 'post'

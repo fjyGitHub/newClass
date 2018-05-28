@@ -7,15 +7,15 @@
 import React, { Component } from "react";
 import {
   Platform,
+  PixelRatio,
   StyleSheet,
   Text,
   View,
-  Image,
   TouchableOpacity,
   ScrollView
 } from "react-native";
 
-import { scaleSize, setSpText, pixel }from '../../utils/screenUtil'
+// import { scaleSize, setSpText, pixel }from '../../utils/screenUtil'
 
 export default class HomeDetail extends Component {
   static navigationOptions = {
@@ -24,6 +24,9 @@ export default class HomeDetail extends Component {
   }
   constructor(props) {
     super(props);
+    this.state = {
+      applyState: 'save'
+    }
   }
   render() {
     return (
@@ -58,15 +61,17 @@ export default class HomeDetail extends Component {
             <Text style={styles.class_detail_bottom_intro}>本书内容包括：马克思主义中国化的历史进程和理论成果、马克思主义中国化理论成果的精髓、新民主主义革命理论、社会主义改造理论、社会主义的本质和根本任务、社会主义初级阶段理论等。</Text>
           </View>
         </ScrollView>
-        <TouchableOpacity activeOpacity={0.6} style={styles.class_detail_apply}>
-          <Text style={styles.class_detail_apply_text}>立即报名</Text>
+        <TouchableOpacity activeOpacity={0.6} style={[styles.class_detail_apply,
+          this.state.applyState ==='apply'? {backgroundColor: '#1CCADA'} : null
+        ]}>
+          <Text style={styles.class_detail_apply_text}>{this.state.applyState ==='apply' ? '立即报名' : '保存修改'}</Text>
         </TouchableOpacity>
       </View>
     );
   }
 }
 
-
+let pixel = 1 / PixelRatio.get() // 1像素
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -74,48 +79,48 @@ const styles = StyleSheet.create({
     backgroundColor: '#f5f5f5'
   },
   class_detail_top: {
-    paddingTop: scaleSize(16),
-    paddingBottom: scaleSize(12),
+    paddingTop: 16,
+    paddingBottom: 12,
     backgroundColor: '#ffffff',
-    paddingLeft: scaleSize(10),
+    paddingLeft: 10,
   },
   class_detail_top_title: {
-    fontSize: setSpText(16),
+    fontSize: 16,
     color: '#333333',
   },
   class_detail_top_name: {
-    fontSize: setSpText(14),
+    fontSize: 14,
     color: '#999999',
-    marginTop: scaleSize(12)
+    marginTop: 12
   },
   class_detail_top_integral: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: scaleSize(10),
-    height: scaleSize(24),
+    marginTop: 10,
+    height: 24,
   },
   class_detail_top_number: {
-    fontSize: setSpText(20),
+    fontSize: 20,
     color: '#CF353B',
   },
   class_detail_top_text: {
     height: '100%',
-    lineHeight: scaleSize(24),
-    fontSize: setSpText(12),
-    marginLeft: scaleSize(3),
+    lineHeight: 24,
+    fontSize: 12,
+    marginLeft: 3,
     color: '#999999'
   },
   class_detail_middle: {
-    marginTop: scaleSize(10),
+    marginTop: 10,
     backgroundColor: '#ffffff'
   },
   class_detail_middle_item: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingLeft: scaleSize(10),
-    paddingRight: scaleSize(16),
-    height: scaleSize(48),
+    paddingLeft: 10,
+    paddingRight: 16,
+    height: 48,
     borderBottomWidth: pixel,
     borderBottomColor: '#D8D8D8',
   },
@@ -127,35 +132,35 @@ const styles = StyleSheet.create({
     textAlign: 'right'
   },
   class_detail_bottom: {
-    marginTop: scaleSize(10),
+    marginTop: 10,
     backgroundColor: '#ffffff'
   },
   class_detail_bottom_title: {
     alignItems: 'center',
     justifyContent: 'center',
-    height: scaleSize(45),
-    paddingLeft: scaleSize(18),
+    height: 45,
+    paddingLeft: 18,
     borderBottomWidth: pixel,
     borderBottomColor: '#D8D8D8',
   },
   class_detail_bottom_text: {
-    fontSize: setSpText(15),
+    fontSize: 15,
     color: '#333333',
-    letterSpacing: scaleSize(2)
+    letterSpacing: 2
   },
   class_detail_bottom_intro: {
-    paddingRight: scaleSize(18),
-    paddingLeft: scaleSize(18),
-    paddingTop: scaleSize(16),
-    paddingBottom: scaleSize(46),
-    fontSize: setSpText(12),
+    paddingRight: 18,
+    paddingLeft: 18,
+    paddingTop: 16,
+    paddingBottom: 46,
+    fontSize: 12,
     color: '#666666',
-    lineHeight: scaleSize(23)
+    lineHeight: 23
   },
   class_detail_apply: {
     position: 'absolute',
     width: '100%',
-    height: scaleSize(49),
+    height: 49,
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#CCCCCC',
@@ -165,6 +170,6 @@ const styles = StyleSheet.create({
   class_detail_apply_text: {
     color: '#ffffff',
     textAlign: 'center',
-    fontSize: setSpText(15)
+    fontSize: 15
   }
 });

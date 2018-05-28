@@ -6,35 +6,33 @@
 
 import React, { Component } from "react";
 import { 
-  Platform, 
+  Platform,
+  PixelRatio,
   StyleSheet, 
   Text,
   View,
   Image,
-  TextInput,
   ScrollView
 } from "react-native";
 
-import { scaleSize, setSpText, pixel }from '../../utils/screenUtil'
+// import { scaleSize, setSpText, pixel }from '../../utils/screenUtil'
 export default class MineTab extends Component {
 
   static navigationOptions = ({navigation,screenProps}) => ({
-    headerTitle:'个人中心',
-    tabBarLabel:'个人中心'
+    headerTitle:'个人中心'
   })
   constructor(props) {
     super(props);
   }
   render() {
     return (
-      <ScrollView>
-        <View style={styles.container}>
+      <ScrollView style={styles.container}>
           <View style={{backgroundColor: '#ffffff'}}>
             <View style={styles.mine_info}>
               <View style={styles.mine_info_left}>
                 <Image source={require('../../assets/img/mine/mine_touxiang.png')} style={styles.mine_info_left_img}></Image>
-                <View style={{ marginLeft: scaleSize(20), marginTop:scaleSize(9)}}>
-                  <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
+                <View style={{ marginLeft: 20, marginTop:9}}>
+                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
                     <Text style={styles.mine_info_left_name}>Greyfey</Text>
                     <Image source={require('../../assets/img/mine/mine_huiyuan.png')} style={styles.mine_info_left_state}></Image>
                   </View>
@@ -83,7 +81,7 @@ export default class MineTab extends Component {
             <View style={styles.mine_list_item}>
               <Image  resizeMode={Image.resizeMode.cover}
                      source={require('../../assets/img/mine/mine_genduo.png')}
-                     style={[styles.mine_list_item_icon, {height: scaleSize(5)}]}>
+                     style={[styles.mine_list_item_icon, {height: 5}]}>
               </Image>
               <View style={[styles.mine_list_item_text, {borderBottomWidth: 0}]}>
                 <Text>更多</Text>
@@ -94,11 +92,11 @@ export default class MineTab extends Component {
                 </Image>
               </View>
             </View>
-            <View style={[styles.mine_list_item, {marginTop: scaleSize(10)}]}>
+            <View style={[styles.mine_list_item, {marginTop: 10}]}>
               <Image
                  resizeMode={Image.resizeMode.cover}
                 source={require('../../assets/img/mine/mine_congzhi.png')}
-                style={[styles.mine_list_item_icon, {width: scaleSize(16),height: scaleSize(19)}]}>
+                style={[styles.mine_list_item_icon, {width: 16,height: 19}]}>
               </Image>
               <View style={[styles.mine_list_item_text, {borderBottomWidth: 0}]}>
                 <Text>充值</Text>
@@ -110,12 +108,12 @@ export default class MineTab extends Component {
               </View>
             </View>
           </View>
-        </View>
       </ScrollView>
     );
   }
 }
 
+let pixel = 1 / PixelRatio.get() // 1像素
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -125,67 +123,60 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
-    marginLeft: scaleSize(16),
-    marginRight: scaleSize(16),
-    paddingTop: scaleSize(12),
-    paddingBottom: scaleSize(14),
+    marginHorizontal: 16,
+    paddingVertical: 12,
     borderBottomWidth: pixel,
-    borderBottomColor:'#e5e5e5'
+    borderBottomColor: '#e5e5e5'
   },
   mine_info_left: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'flex-start',
   },
   mine_info_left_img: {
-    width:scaleSize(50),
-    height: scaleSize(50),
-    borderRadius: scaleSize(25),
+    width: 50,
+    height: 50,
+    borderRadius: 25,
     overflow: 'hidden'
   },
   mine_info_left_name: {
-    fontSize: setSpText(15),
+    fontSize: 15,
     color: '#333333',
   },
   mine_info_left_state: {
-    width: scaleSize(60),
-    height: scaleSize(18),
-    marginLeft: scaleSize(5)
+    width: 60,
+    height: 18,
+    marginLeft: 5
   },
   mine_info_left_id: {
-    fontSize: scaleSize(13),
+    fontSize: 13,
     color: '#999999',
-    marginTop: scaleSize(12)
+    marginTop: 12
   },
   mine_info_right: {
     flexDirection: 'row',
     alignItems: 'center',
-    height: scaleSize(19),
-    marginTop: scaleSize(9)
+    height: 19,
+    marginTop: 9
   },
   mine_info_right_auth: {
-    width: scaleSize(16),
-    height: scaleSize(19)
+    width: 16,
+    height: 19
   },
   mine_info_right_text: {
-    fontSize: scaleSize(10),
+    fontSize: 10,
     color: '#1CCADA',
-    marginLeft: scaleSize(4)
+    marginLeft: 4
   },
   mine_class: {
     backgroundColor: '#ffffff',
-    paddingTop: scaleSize(7),
-    paddingBottom: scaleSize(7),
+    paddingVertical: 7,
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
   },
   mine_class_item: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: scaleSize(5),
-    marginBottom:scaleSize(5)
+    alignItems: 'center'
   },
   mine_class_item_m: {
     borderLeftWidth: pixel,
@@ -193,29 +184,29 @@ const styles = StyleSheet.create({
     borderColor: '#E5E5E5'
   },
   mine_class_item_number: {
-    // height: scaleSize(20),
-    fontSize: setSpText(20),
+    fontSize: 20,
+    marginTop: 5,
     color: '#1CCADA'
   },
   mine_class_item_title: {
-    fontSize: setSpText(13),
+    fontSize: 13,
     color:'#999999',
-    marginTop: scaleSize(8)
+    marginTop: 8
   },
   mine_list: {
-    marginTop: scaleSize(10),
+    marginTop: 10,
   },
   mine_list_item: {
     flexDirection: 'row',
     alignItems: 'center',
-    height: scaleSize(47),
+    height: 47,
     backgroundColor: '#ffffff'
   },
   mine_list_item_icon: {
-    width: scaleSize(18),
-    height: scaleSize(18),
-    marginLeft: scaleSize(17),
-    marginRight: scaleSize(11)
+    width: 18,
+    height: 18,
+    marginLeft: 17,
+    marginRight: 11
   },
   mine_list_item_text: {
     flex: 1,
@@ -227,8 +218,8 @@ const styles = StyleSheet.create({
     borderBottomWidth: pixel
   },
   mine_list_item_arrow: {
-    width: scaleSize(7),
-    height: scaleSize(12),
-    marginRight: scaleSize(11)
+    width: 7,
+    height: 12,
+    marginRight: 11
   }
 });

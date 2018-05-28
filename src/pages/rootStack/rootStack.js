@@ -21,8 +21,12 @@ import {
   TabBarBottom
 } from 'react-navigation';
 
+
+//  引导页
+import Guide from '../guide/guide'
+
 // 首页
-import Home from "../home/home";
+import Home from "../home/home1";
 //  课程详情
 import HomeDetail from '../homeDetail/homeDetail'
 // 创建
@@ -36,7 +40,8 @@ import Mine from "../mine/mine";
 const HomeStack = StackNavigator(
   {
     Home: Home,
-    HomeDetail: HomeDetail
+    HomeDetail: HomeDetail,
+    Guide: Guide
   },
   {
     initialRouteName: 'Home', // 默认显示界面
@@ -104,26 +109,19 @@ const RootStack = TabNavigator({
   Home: {
     screen: HomeStack,
     navigationOptions: ({navigation}) => ({
-      tabBarLabel:'课堂列表',
-      // tabBarIcon: ({tintColor}) => (
-      //   <Image source={require('../../assets/img/tab/tab_class.png')}
-      //          style={{tintColor: tintColor}}/>)
+      tabBarLabel:'课堂列表'
     })
   },
   Create: {
     screen: CreateStack,
     navigationOptions: ({navigation}) => ({
-      tabBarLabel:'创建课程',
-      // tabBarIcon: ({tintColor}) => (
-      //   <Image source={require('../../assets/img/tab/tab_pub.png')}
-      //          style={{tintColor: tintColor}}/>)
+      tabBarLabel:'创建课程'
     })
   },
   Mine: {
     screen: MineStack,
     navigationOptions: ({navigation}) => ({
       tabBarLabel:'个人中心',
-      // tabBarIcon: ({tintColor}) => (<Image source={require('../../assets/img/tab/tab_mine.png')} style={[{tintColor: tintColor}, {width:24,height:24}]}/>)
     })
   },
 }, {
