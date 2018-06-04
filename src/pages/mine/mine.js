@@ -12,17 +12,52 @@ import {
   Text,
   View,
   Image,
+  TouchableOpacity,
   ScrollView
 } from "react-native";
 
+import {fetchRequest} from '../../fetch/request1'
+import urls from '../../api/api'
 // import { scaleSize, setSpText, pixel }from '../../utils/screenUtil'
 export default class MineTab extends Component {
 
   static navigationOptions = ({navigation,screenProps}) => ({
-    headerTitle:'个人中心'
+    headerTitle:'个人中心',
+    tabBarLabel: '个人中心',
   })
   constructor(props) {
     super(props);
+    this.state = {
+      head_image: require('../../assets/img/mine/mine_touxiang.png'),
+      nick_name: '',
+      integral: '0',
+      grade: '',
+      status: '',
+      id: '',
+      curriculum_count: ''
+    }
+  }
+  getUserInfo() {
+    fetchRequest({
+      url: urls.getUserInfo,
+      method: 'get',
+      params: {
+        uid: 1
+      }
+    }).then(res=> {
+      let _data = res.data
+      this.setState({
+        head_image: {uri: _data.head_image},
+        nick_name: _data.nick_name,
+        integral: _data.integral,
+        grade: _data.grade,
+        status: _data.status,
+        id: _data.id,
+        curriculum_count: _data.curriculum_count
+      })
+      console.log(res)
+    }).catch(err => {
+    })
   }
   render() {
     return (
@@ -30,13 +65,13 @@ export default class MineTab extends Component {
           <View style={{backgroundColor: '#ffffff'}}>
             <View style={styles.mine_info}>
               <View style={styles.mine_info_left}>
-                <Image source={require('../../assets/img/mine/mine_touxiang.png')} style={styles.mine_info_left_img}></Image>
+                <Image source={this.state.head_image} style={styles.mine_info_left_img}></Image>
                 <View style={{ marginLeft: 20, marginTop:9}}>
                   <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                    <Text style={styles.mine_info_left_name}>Greyfey</Text>
+                    <Text style={styles.mine_info_left_name}>{this.state.nick_name}</Text>
                     <Image source={require('../../assets/img/mine/mine_huiyuan.png')} style={styles.mine_info_left_state}></Image>
                   </View>
-                  <Text style={styles.mine_info_left_id}>ID：1231345</Text>
+                  <Text style={styles.mine_info_left_id}>ID：{this.state.id}</Text>
                 </View>
               </View>
               <View style={styles.mine_info_right}>
@@ -47,7 +82,7 @@ export default class MineTab extends Component {
           </View>
           <View style={styles.mine_class}>
             <View style={styles.mine_class_item}>
-              <Text style={styles.mine_class_item_number}>2</Text>
+              <Text style={styles.mine_class_item_number}>{this.state.curriculum_count}</Text>
               <Text style={styles.mine_class_item_title}>已购课程</Text>
             </View>
             <View style={[styles.mine_class_item, styles.mine_class_item_m]}>
@@ -55,31 +90,40 @@ export default class MineTab extends Component {
               <Text style={styles.mine_class_item_title}>已学习课程</Text>
             </View>
             <View style={styles.mine_class_item}>
-              <Text style={styles.mine_class_item_number}>200</Text>
+              <Text style={styles.mine_class_item_number}>{this.state.integral}</Text>
               <Text style={styles.mine_class_item_title}>剩余积分</Text>
             </View>
           </View>
           <View style={styles.mine_list}>
-            <View style={styles.mine_list_item}>
-              <Image source={require('../../assets/img/mine/mine_lishi.png')} style={styles.mine_list_item_icon}></Image>
+            <TouchableOpacity style={styles.mine_list_item} activeOpacity={0.6}
+            onPress={()=> {
+              this.props.navigation.navigate('History')
+            }}>
+              <Image
+                resizeMode={Image.resizeMode.contain}
+                source={require('../../assets/img/mine/mine_lishi.png')}
+                style={styles.mine_list_item_icon}></Image>
               <View style={styles.mine_list_item_text}>
                 <Text>浏览历史</Text>
                 <Image source={{uri: 'right_arrow'}} style={styles.mine_list_item_arrow}></Image>
               </View>
-            </View>
-            <View style={styles.mine_list_item}>
-              <Image source={require('../../assets/img/mine/mine_kefu.png')} style={styles.mine_list_item_icon}></Image>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.mine_list_item} activeOpacity={0.6}>
+              <Image
+                resizeMode={Image.resizeMode.contain}
+                source={require('../../assets/img/mine/mine_kefu.png')}
+                style={styles.mine_list_item_icon}></Image>
               <View style={styles.mine_list_item_text}>
                 <Text>客服中心</Text>
                 <Image
-                  resizeMode={Image.resizeMode.cover}
+                  resizeMode={Image.resizeMode.contain}
                   source={{uri: 'right_arrow'}}
                   style={styles.mine_list_item_arrow}>
                 </Image>
               </View>
-            </View>
-            <View style={styles.mine_list_item}>
-              <Image  resizeMode={Image.resizeMode.cover}
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.mine_list_item} activeOpacity={0.6}>
+              <Image  resizeMode={Image.resizeMode.contain}
                      source={require('../../assets/img/mine/mine_genduo.png')}
                      style={[styles.mine_list_item_icon, {height: 5}]}>
               </Image>
@@ -91,7 +135,7 @@ export default class MineTab extends Component {
                   style={styles.mine_list_item_arrow}>
                 </Image>
               </View>
-            </View>
+            </TouchableOpacity>
             <View style={[styles.mine_list_item, {marginTop: 10}]}>
               <Image
                  resizeMode={Image.resizeMode.cover}
@@ -110,6 +154,9 @@ export default class MineTab extends Component {
           </View>
       </ScrollView>
     );
+  }
+  componentDidMount() {
+    this.getUserInfo()
   }
 }
 

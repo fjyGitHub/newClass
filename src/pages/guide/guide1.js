@@ -25,11 +25,7 @@ export default  class Guide extends Component {
         isLogin: false
       }
     })
-    const resetAction = NavigationActions.reset({
-      index: 0,
-      actions: [NavigationActions.navigate({ routeName: 'Login' })],
-    });
-    this.props.navigation.dispatch(resetAction);
+    this.props.navigation.navigate('LoginStack')
   }
   render() {
     return (
@@ -65,17 +61,9 @@ export default  class Guide extends Component {
   componentWillMount() {
     storage.load({key: 'loginState'}).then(result => {
       if (!result.isFirst && !result.isLogin) {
-        const resetAction = NavigationActions.reset({
-          index: 0,
-          actions: [NavigationActions.navigate({ routeName: 'Login' })],
-        });
-        this.props.navigation.dispatch(resetAction);
+        this.props.navigation.navigate('LoginStack');
       } else if (!result.isFirst && result.isLogin) {
-        const resetAction = NavigationActions.reset({
-          index: 0,
-          actions: [NavigationActions.navigate({ routeName: 'Home' })],
-        });
-        this.props.navigation.dispatch(resetAction)
+        this.props.navigation.navigate('AppStack')
       }
     }).catch(err => {
       console.log(err)

@@ -22,6 +22,7 @@ export default class Home extends React.Component {
 
   static navigationOptions = ({navigation}) => ({
     header: null,
+    tabBarLabel: '课程列表',
     tabBarOnPress: (tab) => {
       let _scene = tab.scene
       if (!_scene.focused) {
@@ -146,6 +147,7 @@ export default class Home extends React.Component {
     }
   }
   componentWillMount() {
+    console.log('000000')
     this.props.navigation.setParams({ navigatePress: this._clickTabCallback.bind(this) })
     // this.props.navigation.setParams({ onSearch: this._handleSearch })
   }

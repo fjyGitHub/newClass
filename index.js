@@ -5,8 +5,11 @@ import {
   SafeAreaView
 } from "react-native";
 
-import App from './src/pages/rootStack/rootStack';
+//  导入本地保存
+import './src/utils/storage'
 
+import App from './src/pages/rootStack/rootStack';
+// import Guide from './src/pages/guide/guide'
 
 // 忽略警告
 console.ignoredYellowBox = ['Warning: isMounted(...) is deprecated']

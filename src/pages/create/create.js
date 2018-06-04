@@ -6,7 +6,6 @@
 
 import React, { Component } from "react";
 import {
-  Platform,
   PixelRatio,
   StyleSheet,
   Text,
@@ -18,13 +17,13 @@ import {
   TouchableOpacity
 } from "react-native";
 
-var TakeViewManager = NativeModules.TakeViewManager;
 
 // import { scaleSize, setSpText, pixel,dateParse }from '../../utils/screenUtil'
-
+import {fetchRequest, fetchImage} from '../../fetch/request1'
+import toast from '../../utils/toast'
 import DatePicker from 'react-native-datepicker'
 
-import ImagePicker from 'react-native-image-picker'
+import ActionSheet from 'react-native-actionsheet'
 
 const photoOptions = {
   title: '请选择图片',
@@ -66,16 +65,19 @@ let dataStyle = {
     color: '#999999'
   }
 }
-import {uploadImage} from '../../fetch/request'
+// import {uploadImage} from '../../fetch/request'
 
 import urls from '../../api/api'
 
-import { toastShort } from '../../utils/toast';
+// import { toastShort } from '../../utils/toast';
 
+var ImagePicker = NativeModules.ImageCropPicker;
+console.log(ImagePicker)
 
 export default class CreatTab extends Component {
   static navigationOptions = ({navigation,screenProps}) => ({
     headerTitle:'创建课程',
+    tabBarLabel: '发布课程',
     tabBarOnPress: (tab) => {
       tab.jumpToIndex(tab.scene.index)
     }
@@ -92,77 +94,118 @@ export default class CreatTab extends Component {
       class_end_time: '',
       class_integral: '',
       class_password: '',
-      source: require('../../assets/img/create/create_add.png')
+      source: require('../../assets/img/create/create_add.png'),
+      place_integral: '0',
+      place_integral_text: '请输入所需积分',
+      place_integral_color: '#999999'
     }
   }
-  _handleTest() {
-    TakeViewManager.addEventCeshi(('测试'),(error,events) =>{
-
-    });
+  //获取所需最低积分
+  _getMinimumIntegral = () => {
+    fetchRequest({
+      url: urls.getMinimumIntegral,
+      method: 'get'
+    }).then(res => {
+      let _data = res.data
+      this.setState({
+        place_integral: _data,
+        place_integral_text: `请输入所需积分,${_data}积分以上`
+      })
+      console.log(res)
+    }).catch(err => {
+    })
   }
   //  创建课堂
-  _handleCreateClass() {
-
+  _onCreateClass = ()=> {
     if (this.state.class_name==='') {
-      toastShort('请输入课程名称')
+      toast.show('请输入课程名称')
     } else if (this.state.class_description==='') {
-      toastShort('请输入课程描述')
+      toast.show('请输入课程描述')
     } else if (this.state.file==='') {
-      toastShort('请选择课程图片')
+      toast.show('请选择课程图片')
     } else if (this.state.class_up_time==='') {
-      toastShort('请选择上课时间')
+      toast.show('请选择上课时间')
     } else if (this.state.class_start_time==='') {
-      toastShort('请选择课程开始时间')
+      toast.show('请选择课程开始时间')
     } else if (this.state.class_end_time==='') {
-      toastShort('请选择课程结束时间')
+      toast.show('请选择课程结束时间')
     } else if (this.state.class_integral==='') {
-      toastShort('请输入所需积分')
+      toast.show('请输入所需积分')
     } else if (this.state.class_password==='') {
-      toastShort('请输入房间密码')
+      toast.show('请输入房间密码')
     } else {
-      uploadImage(urls.postCurriculumInfo, {
-        uid: this.state.uid,
-        file: this.state.file,
-        class_name: this.state.class_name,
-        class_description: this.state.class_description,
-        class_up_time: this.state.class_up_time,
-        class_start_time: this.state.class_start_time,
-        class_end_time: this.state.class_end_time,
-        class_integral: this.state.class_integral,
-        class_password: this.state.class_password,
-      }).then(res=> {
+      console.log('而噩噩且无人敢')
+      if (+this.state.class_integral < +this.state.place_integral) {
         this.setState({
-          uid: 1,
-          file: '',
-          class_name: '',
-          class_description: '',
-          class_up_time: "",
-          class_start_time:'',
-          class_end_time: '',
-          class_integral: '',
-          class_password: '',
-          source: require('../../assets/img/create/create_add.png')
-        }, ()=>{
-          toastShort('创建课程成功')
+          place_integral: `${this.state.place_integral}积分以上，请重新输入`,
+          place_integral_color: '#D0021B'
         })
-      }).catch(err => {
-      })
+      } else {
+        console.log('浙uuuu')
+        fetchImage({
+            url: urls.postCurriculumInfo,
+            params: {
+              uid: this.state.uid,
+              file: this.state.file,
+              class_name: this.state.class_name,
+              class_description: this.state.class_description,
+              class_up_time: this.state.class_up_time,
+              class_start_time: this.state.class_start_time,
+              class_end_time: this.state.class_end_time,
+              class_integral: this.state.class_integral,
+              class_password: this.state.class_password,
+            }
+          }).then(res=> {
+            console.log(res)
+            this.setState({
+              uid: 1,
+              file: '',
+              class_name: '',
+              class_description: '',
+              class_up_time: "",
+              class_start_time:'',
+              class_end_time: '',
+              class_integral: '',
+              class_password: '',
+              source: require('../../assets/img/create/create_add.png')
+            }, ()=>{
+              toast.show('创建课程成功')
+            })
+        }).catch(err => {
+        })
+      }
     }
   }
   //  选择图片
   _showImagePicker() {
-    ImagePicker.showImagePicker(photoOptions, (response) => {
-      if (response.didCancel) {
-        console.log('User cancelled image picker');
-      } else if (response.error) {
-        console.log('ImagePicker Error: ', response.error);
-      } else {
+    this.ActionSheet.show()
+  }
+  _onActionSheet=(index) => {
+    if (index ===0) {
+      ImagePicker.openPicker({
+        width: 172,
+        height: 172,
+        cropping: true
+      }).then(image => {
         this.setState({
-          file: response.uri,
-          source:{uri: response.uri}
+          file: image.path,
+          source:{uri: image.path}
         })
-      }
-    })
+      }).catch(e => {
+        console.log(e)
+      });
+    } else if (index ===1) {
+      ImagePicker.openCamera({
+        width: 172,
+        height: 172,
+        cropping: true
+      }).then(image => {
+        this.setState({
+          file: image.path,
+          source:{uri: image.path}
+        })
+      }).catch(e => alert(e))
+    }
   }
   render() {
     return (
@@ -203,27 +246,30 @@ export default class CreatTab extends Component {
           </TouchableOpacity>
           <View style={styles.item}>
             <Text style={styles.item_left}>上课时间</Text>
-            <DatePicker
-              style={{flex: 2}}
-              date={this.state.class_up_time}
-              mode="datetime"
-              placeholder="请选择开课时间"
-              showIcon={false}
-              format="YYYY-MM-DD HH:mm"
-              confirmBtnText="确定"
-              cancelBtnText="取消"
-              customStyles={dataStyle}
-              onDateChange={(date) => {this.setState({class_up_time: date})}}
-            />
-            <Image
-              resizeMode={Image.resizeMode.cover}
+            <View style={styles.item_right_date}>
+               <DatePicker
+                  style={{flex: 1}}
+                  date={this.state.class_up_time}
+                  mode="datetime"
+                  placeholder="请选择开课时间"
+                  showIcon={false}
+                  format="YYYY-MM-DD HH:mm"
+                  confirmBtnText="确定"
+                  cancelBtnText="取消"
+                  customStyles={dataStyle}
+                  onDateChange={(date) => {this.setState({class_up_time: date})}}
+                />
+               <Image
+              resizeMode={Image.resizeMode.contain}
               style={styles.item_right_date_arrow}
               source={require('../../assets/img/right_arrow.png')}></Image>
+            </View>
           </View>
           <View style={styles.item}>
             <Text style={styles.item_left}>课程开始时间</Text>
-            <DatePicker
-              style={{flex: 2}}
+            <View style={styles.item_right_date}>
+              <DatePicker
+              style={{flex: 1}}
               date={this.state.class_start_time}
               mode="datetime"
               placeholder="请选择课程开始时间"
@@ -234,10 +280,12 @@ export default class CreatTab extends Component {
               customStyles={dataStyle}
               onDateChange={(date) => {this.setState({class_start_time: date})}}
             />
-            <Image
-              resizeMode={Image.resizeMode.cover}
+              <Image
+              resizeMode={Image.resizeMode.contain}
               style={styles.item_right_date_arrow}
-              source={require('../../assets/img/right_arrow.png')}></Image>
+              source={require('../../assets/img/right_arrow.png')}>
+            </Image>
+            </View>
           </View>
           <View style={styles.item}>
             <Text style={styles.item_left}>课程结束时间</Text>
@@ -255,7 +303,7 @@ export default class CreatTab extends Component {
                 onDateChange={(date) => {this.setState({class_end_time: date})}}
               />
               <Image
-                resizeMode={Image.resizeMode.cover}
+                resizeMode={Image.resizeMode.contain}
                 style={styles.item_right_date_arrow}
                 source={require('../../assets/img/right_arrow.png')}></Image>
             </View>
@@ -266,9 +314,11 @@ export default class CreatTab extends Component {
                        underlineColorAndroid="transparent"
                        keyboardType='numeric'
                        clearButtonMode='while-editing'
-                       placeholder="请输入所需积分"
-                       placeholderTextColor='#999999'
-                       onChangeText={(class_integral) => this.setState({class_integral})}
+                       placeholder={this.state.place_integral_text}
+                       placeholderTextColor={this.state.place_integral_color}
+                       onChangeText={(class_integral) => {
+                         this.setState({class_integral})
+                       }}
                        value={this.state.class_integral}>
             </TextInput>
           </View>
@@ -285,15 +335,25 @@ export default class CreatTab extends Component {
             </TextInput>
           </View>
           <TouchableOpacity activeOpacity={0.6}
-                            onPress={this._handleTest.bind(this)}
+                            onPress={this._onCreateClass}
                             style={styles.sure_button_wrap}>
             <View style={styles.sure_button}>
               <Text style={styles.sure_button_text}>确认创建</Text>
             </View>
           </TouchableOpacity>
         </View>
+        <ActionSheet
+          ref={o => this.ActionSheet = o}
+          title={'请选择图片'}
+          options={['相册', '相机', '取消']}
+          cancelButtonIndex={2}
+          onPress={this._onActionSheet.bind(this)}
+        />
       </ScrollView>
     );
+  }
+  componentDidMount() {
+    this._getMinimumIntegral()
   }
 }
 

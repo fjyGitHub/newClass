@@ -24,7 +24,6 @@ export default class RefreshListView extends Component {
     return (
       <FlatList
         {...this.props}
-        columnWrapperStyle={{justifyContent: 'space-around'}}
         onRefresh={()=>{ this.beginHeaderRefresh() }}
         refreshing={this.state.isHeaderRefreshing}
         onEndReached={() => { this.beginFooterRefresh() }}

@@ -87,7 +87,8 @@ export function fetchRequest(config) {
   })
 }
 // 上传图片
-export const fetchImage = (config) => {
+export function fetchImage(config) {
+  console.log(config)
   let _url = common_url + config.url
   let _params = config.params
   let formData = new FormData()

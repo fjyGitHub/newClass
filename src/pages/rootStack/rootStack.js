@@ -8,122 +8,47 @@ import React, { Component } from "react";
 
 import {
   Platform,
+  PixelRatio,
   AppRegistry,
   StyleSheet,
   View,
   Image,
+  Text,
   SafeAreaView
 } from "react-native";
 
 import {
   StackNavigator,
+  SwitchNavigator,
   TabNavigator,
   TabBarBottom
 } from 'react-navigation';
 
 
-//  引导页
-import Guide from '../guide/guide'
+//  首次安装引导页
+import Guide from '../guide/guide1'
+const GuideStack = StackNavigator({
+  Guide: Guide
+})
+//  登录页
+import Login from '../login/login'
+const LoginStack = StackNavigator({
+  Login: Login
+})
 
 // 首页
-import Home from "../home/home1";
+import Class from "../class/home1";
 //  课程详情
-import HomeDetail from '../homeDetail/homeDetail'
+import ClassDetail from '../class/classDetail'
 // 创建
 import Create from "../create/create";
 // 我的
 import Mine from "../mine/mine";
-//  登录
-// import Login from "../login/login"
-
-
-const HomeStack = StackNavigator(
-  {
-    Home: Home,
-    HomeDetail: HomeDetail,
-    Guide: Guide
-  },
-  {
-    initialRouteName: 'Home', // 默认显示界面
-    navigationOptions: {
-      headerTitleStyle: {
-        fontSize: 17,
-        color: '#000000'
-      },
-      headerStyle: {
-        backgroundColor: '#ffffff'
-      }
-    }
-  }
-);
-//
-// HomeStack.navigationOptions = ({ navigation }) => {
-//   return {
-//     tabBarVisible: navigation.state.index === 0
-//   }
-// };
-const CreateStack = StackNavigator(
-  {
-    Create: Create
-  },
-  {
-    initialRouteName: 'Create',
-    navigationOptions: {
-      headerTitleStyle: {
-        flex: 1,
-        fontSize: 17,
-        textAlign: 'center',
-      },
-      headerStyle: {
-        backgroundColor: '#ffffff',
-        borderBottomWidth: 1,
-        borderBottomColor: '#D8D8D8'
-      }
-    }
-  }
-);
-
-const MineStack = StackNavigator(
-  {
-    Mine: Mine
-  },
-  {
-    initialRouteName: 'Mine', // 默认显示界面
-    navigationOptions: {
-      headerTitleStyle: {
-        flex: 1,
-        fontSize: 17,
-        textAlign: 'center',
-        color: '#000000'
-      },
-      headerStyle: {
-        backgroundColor: '#ffffff',
-        borderBottomWidth: 1,
-        borderBottomColor: '#D8D8D8'
-      }
-    }
-  }
-);
-
-const RootStack = TabNavigator({
-  Home: {
-    screen: HomeStack,
-    navigationOptions: ({navigation}) => ({
-      tabBarLabel:'课堂列表'
-    })
-  },
-  Create: {
-    screen: CreateStack,
-    navigationOptions: ({navigation}) => ({
-      tabBarLabel:'创建课程'
-    })
-  },
-  Mine: {
-    screen: MineStack,
-    navigationOptions: ({navigation}) => ({
-      tabBarLabel:'个人中心',
-    })
-  },
+import History from "../mine/history";
+const Home = TabNavigator({
+  Class: Class,
+  Create: Create,
+  Mine: Mine
 }, {
   tabBarVisible: false,
   animationEnabled: false, // 切换页面时不显示动画
@@ -157,13 +82,42 @@ const RootStack = TabNavigator({
   },
 })
 
-import {isIphoneX} from '../../utils/screenUtil'
+
+const AppStack = StackNavigator({
+  Home: Home,
+  ClassDetail: ClassDetail,
+  History: History
+},
+  {
+    initialRouteName: 'Home', // 默认显示界面
+    navigationOptions: {
+      headerTitleStyle: {
+        flex: 1,
+        fontSize: 17,
+        textAlign: 'center',
+        color: '#000000'
+      },
+      headerStyle: {
+        backgroundColor: '#ffffff',
+        borderBottomWidth: 1 / PixelRatio.get(),
+        borderBottomColor: '#D8D8D8'
+      },
+      headerBackTitle: null,
+      headerTintColor: '#000000'
+    }
+  })
+
+let RootStack = SwitchNavigator({
+  GuideStack: GuideStack,
+  LoginStack: LoginStack,
+  AppStack: AppStack
+}, {
+  initialRouteName: 'GuideStack',
+})
 
 class App extends Component {
   render() {
-    return (
-      isIphoneX() ? <SafeAreaView style={styles.container}><RootStack/></SafeAreaView> : <RootStack/>
-    );
+    return <RootStack/>;
   }
 }
 const styles = StyleSheet.create({
